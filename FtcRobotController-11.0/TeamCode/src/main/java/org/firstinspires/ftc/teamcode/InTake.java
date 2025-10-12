@@ -1,20 +1,29 @@
 import java.util.ArrayList;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import java.util.List;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-@TeleOp
-
 public class InTake{
     private DcMotor MotorIntake;
-    private ColorSensor ColorSensor;
+    private ColorSensor colorSensor;
     private Servo IndexerServo;
     private List<String> balls = new ArrayList<>();
     private int current_index;
+
+    public InTake(HardwareMap hardwareMap) {
+        MotorIntake = hardwareMap.get(DcMotor.class, "motorTest");
+        IndexerServo = hardwareMap.get(Servo.class, "servo");
+        colorSensor = hardwareMap.get(ColorSensor.class, "sensor");
+        current_index = 0;
+
+        for (int i=0; i<3; i++) {
+            balls.add("Nothing");
+        }
+        IndexerServo.setPosition(0.0);
+    }
 
     public static void delay(long millis) {
         try {
@@ -44,9 +53,9 @@ public class InTake{
     }
 
     public String CheckColor(){
-        int red = ColorSensor.red();
-        int green = ColorSensor.green();
-        int blue = ColorSensor.blue();
+        int red = colorSensor.red();
+        int green = colorSensor.green();
+        int blue = colorSensor.blue();
         if (green>100){
             return "Green";
         } else if (blue>green && red>green){
@@ -68,18 +77,5 @@ public class InTake{
         }
         current_index = index;
         SetIndexerServo(index);
-    }
-
-
-    public void init(LinearOpMode opMode) {
-        MotorIntake = opMode.hardwareMap.get(DcMotor.class, "motorTest");
-        IndexerServo = opMode.hardwareMap.get(Servo.class, "servo");
-        ColorSensor = opMode.hardwareMap.get(ColorSensor.class, "sensor");
-        current_index = 0;
-
-        for (int i=0; i<3; i++) {
-            balls.add("Nothing");
-        }
-        IndexerServo.setPosition(0.0);
     }
 }

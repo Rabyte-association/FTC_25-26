@@ -6,13 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class LinearOpMode extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
 
     private DriveBase drivebase;
-    private Intake intake;
+    private InTake intake;
 
     @Override
     public void runOpMode() throws InterruptedException {
         drivebase = new DriveBase(hardwareMap, gamepad1);
         intake = new InTake(hardwareMap);
-        intake.init();
 
         waitForStart();
 
