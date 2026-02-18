@@ -13,8 +13,8 @@ public class DriveBase {
     private double drive, turn, strafe;
     private double frontLeftPower, frontRightPower, backLeftPower, backRightPower;
 
-    public DriveBase(HardwareMap hardwareMap, Gamepad gamepad) {
-        this.gamepad1 = gamepad;
+    public DriveBase(HardwareMap hardwareMap) {
+        //this.gamepad1 = gamepad;
 
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -26,7 +26,7 @@ public class DriveBase {
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
     }
-    public void update() {
+    public void update(Gamepad gamepad1) {
         double controllerSensitivity = 0.05;
         drive  = Math.abs(gamepad1.left_stick_y)  > controllerSensitivity ? -gamepad1.left_stick_y  : 0;
         turn   = Math.abs(gamepad1.right_stick_x) > controllerSensitivity ? -gamepad1.right_stick_x : 0;
