@@ -10,14 +10,15 @@ public class LinearOpMode extends com.qualcomm.robotcore.eventloop.opmode.Linear
 
     @Override
     public void runOpMode() throws InterruptedException {
-        drivebase = new DriveBase(hardwareMap, gamepad1);
+//        drivebase = new DriveBase(hardwareMap, gamepad1);
         intake = new InTakeBest(hardwareMap, gamepad1);
+        intake.cameraInit(hardwareMap);
         waitForStart();
 
         while (opModeIsActive()) {
-            drivebase.update();
+//            drivebase.update();
             intake.update(0);
-            telemetry.addData("ball_detected: ", intake.pipeline.detected);
+            telemetry.addData("ball_detected: ", intake.pipeline.detectedGreen || intake.pipeline.detectedPurple);
             telemetry.update();
 
         }

@@ -15,9 +15,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 
 public class InTakeBest {
-    private final ColorSensor colorSensor;
-    private final DcMotor outMotor;
-    private final DcMotor inMotor;
+//    private final ColorSensor colorSensor;
+//    private final DcMotor outMotor;
+//    private final DcMotor inMotor;
     private final Servo IndexerServo;
     private final List<String> balls = new ArrayList<>();
     private int current_index;
@@ -27,17 +27,17 @@ public class InTakeBest {
     private int intaking_stage;
     private boolean is_intaking;
     private final Gamepad gamepad;
-    static final int STREAM_WIDTH = 1920; // modify for your camera
-    static final int STREAM_HEIGHT = 1080; // modify for your camera
+    static final int STREAM_WIDTH = 320; // modify for your camera
+    static final int STREAM_HEIGHT = 240; // modify for your camera
     OpenCvWebcam webcam;
     IntakeCameraPipeline pipeline;
     boolean hasCameraFiled = false;
 
     public InTakeBest(HardwareMap hardwareMap, Gamepad gamepad1) {
         IndexerServo = hardwareMap.get(Servo.class, "servo");
-        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
-        inMotor = hardwareMap.get(DcMotor.class, "inMotor");
-        outMotor = hardwareMap.get(DcMotor.class, "outMotor");
+//        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+//        inMotor = hardwareMap.get(DcMotor.class, "inMotor");
+//        outMotor = hardwareMap.get(DcMotor.class, "outMotor");
         current_index = 0;
         index_is_reversed = false;
         indexer_charge = speed_of_intaking;
@@ -49,29 +49,25 @@ public class InTakeBest {
             balls.add("Nothing");
         }
         IndexerServo.setPosition(0.0);
-        cameraInit(hardwareMap);
     }
     public void cameraInit(HardwareMap hardwareMap) {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = null;
-        webcamName = hardwareMap.get(WebcamName.class, "WebcamIntake"); // put your camera's name here
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "WebcamIntake"); // nazwa kamery w konfiguracji
+
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
         pipeline = new IntakeCameraPipeline();
         webcam.setPipeline(pipeline);
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            public void onOpened() {
+                // Start streamu – można zmienić rozdzielczość np. 320x240 dla szybszego działania
                 webcam.startStreaming(STREAM_WIDTH, STREAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
             public void onError(int errorCode) {
-                hasCameraFiled = true;
+                hasCameraFiled = true; // flaga błędu, możesz też dodać telemetry
             }
         });
-
     }
 
     public void inTake(){
@@ -103,20 +99,20 @@ public class InTakeBest {
                 intaking_stage=0;
             }
             indexer_charge=0;
-            inMotor.setPower(0.0);
-            outMotor.setPower(0.0);
+//            inMotor.setPower(0.0);
+//            outMotor.setPower(0.0);
             if (is_intaking) {
-                inMotor.setPower(1.0);
+//                inMotor.setPower(1.0);
                 SetIndexerServo(intaking_stage - 1, false);
             }else{
-                outMotor.setPower(1.0);
+//                outMotor.setPower(1.0);
                 if (intaking_stage==when_is_green){
                     SetOutput("Green");
                 }else{
                     SetOutput("Purple");
                 }
             }
-        } else if (gamepad.a || pipeline.detected){
+        } else if (gamepad.a || pipeline.detectedGreen || pipeline.detectedPurple){
             inTake();
         } else if (gamepad.b) {
             ouTake();
@@ -134,9 +130,10 @@ public class InTakeBest {
     }
 
     public String CheckColor(){
-        int red = colorSensor.red();
-        int green = colorSensor.green();
-        int blue = colorSensor.blue();
+        int red= 0, green = 0, blue = 0;
+//        int red = colorSensor.red();
+//        int green = colorSensor.green();
+//        int blue = colorSensor.blue();
         if (green-3>red && green-3>blue){
             return "Green";
         } else if (blue<5 && green<5 && red<5){
@@ -146,15 +143,15 @@ public class InTakeBest {
         }
     }
 
-    public int Red(){
-        return colorSensor.red();
-    }
-    public int Blue(){
-        return colorSensor.blue();
-    }
-    public int Green(){
-        return colorSensor.green();
-    }
+//    public int Red(){
+//        return colorSensor.red();
+//    }
+//    public int Blue(){
+//        return colorSensor.blue();
+//    }
+//    public int Green(){
+//        return colorSensor.green();
+//    }
     public void SetOutput(String color){
         int min_distance = 3;
         int index = 0;
