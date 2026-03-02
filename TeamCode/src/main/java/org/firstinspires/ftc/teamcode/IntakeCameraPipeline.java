@@ -6,9 +6,8 @@ import org.opencv.core.Scalar;
 import org.opencv.core.CvType;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
-import java.util.ArrayList;
 
-public class IntakeCameraPipeline extends OpenCvPipeline {
+public class IntakeCameraPipeline extends OpenCvPipeline { // ball detection based on easy opencv
 
     Mat hsv = new Mat();
     Mat maskGreen = new Mat();
@@ -27,7 +26,7 @@ public class IntakeCameraPipeline extends OpenCvPipeline {
     }
 
     @Override
-    public Mat processFrame(Mat input) {
+    public Mat processFrame(Mat input) { // we are searching for blobs of colors on screen
         inputToHsv(input);
 
         // Zakres fioletu (Hue 155-175)
