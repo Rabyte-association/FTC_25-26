@@ -1,7 +1,8 @@
 repositories {
     mavenCentral()
-    google() // Needed for androidx
+    google()
 }
+
 
 dependencies {
     implementation 'org.firstinspires.ftc:Inspection:11.0.0'
