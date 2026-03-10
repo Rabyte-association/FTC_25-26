@@ -14,10 +14,10 @@ public class Base { // class contains every electronic part of the robot
     BallDetection ballDetection;
 
     public Base(HardwareMap hardwareMap, Gamepad pad){
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
-        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "mot4");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "mot3");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "mot2");
+        backRightMotor = hardwareMap.get(DcMotor.class, "mot1");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         outtakeMotor = hardwareMap.get(DcMotor.class, "outtakeMotor");
 
@@ -28,6 +28,7 @@ public class Base { // class contains every electronic part of the robot
         gamepad = pad;
 
         ballDetection = new BallDetection(hardwareMap);
+        intakeSensor.enableLed(true);
     }
     public int Red(){
         return intakeSensor.red();

@@ -12,13 +12,13 @@ public class DriveBase { // mapping gamepad input to the power of motors
     }
     public void update() {
         double controllerSensitivity = 0.05;
-        drive  = Math.abs(base.gamepad.left_stick_y)  > controllerSensitivity ? -base.gamepad.left_stick_y  : 0;
-        turn   = Math.abs(base.gamepad.right_stick_x) > controllerSensitivity ? -base.gamepad.right_stick_x : 0;
-        strafe = Math.abs(base.gamepad.left_stick_x)  > controllerSensitivity ?  base.gamepad.left_stick_x  : 0;
+        drive  = Math.abs(base.gamepad.left_stick_x)  > controllerSensitivity ? -base.gamepad.left_stick_x  : 0;
+        turn   = Math.abs(base.gamepad.left_stick_y) > controllerSensitivity ? -base.gamepad.left_stick_y : 0;
+        strafe = Math.abs(base.gamepad.right_stick_x)  > controllerSensitivity ?  base.gamepad.right_stick_x  : 0;
 
-        frontLeftPower = drive + turn + strafe;
+        frontLeftPower = drive + turn - strafe;
         frontRightPower = drive - turn - strafe;
-        backLeftPower = drive + turn - strafe;
+        backLeftPower = drive + turn + strafe;
         backRightPower = drive - turn + strafe;
 
         double[] appliedPowers = scalePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);

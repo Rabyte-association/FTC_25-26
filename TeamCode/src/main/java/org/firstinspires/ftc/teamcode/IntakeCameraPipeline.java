@@ -30,12 +30,12 @@ public class IntakeCameraPipeline extends OpenCvPipeline { // ball detection bas
         inputToHsv(input);
 
         // Zakres fioletu (Hue 155-175)
-        Scalar lowerPurple = new Scalar(145, 100, 100);
+        Scalar lowerPurple = new Scalar(145, 50, 30);
         Scalar upperPurple = new Scalar(220, 255, 255);
 
         // Zakres zielonego (Hue ~50-80)
-        Scalar lowerGreen = new Scalar(50, 100, 100);
-        Scalar upperGreen = new Scalar(80, 255, 255);
+        Scalar lowerGreen = new Scalar(100, 50, 30);
+        Scalar upperGreen = new Scalar(130, 255, 255);
 
         // Maski
         Core.inRange(hsv, lowerPurple, upperPurple, maskPurple);
