@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.List;
 
@@ -19,10 +20,20 @@ public class Autonomous_vision extends LinearOpMode{
         SHOOT_BALL
     }
 
-
     public void runOpMode() throws InterruptedException {
         State currentState = State.GET_MOTIF;
         Pose2d initialPose = new Pose2d(63.5, -24, Math.toRadians(90));
+
+        if(gamepad1.a) {
+            initialPose = new Pose2d(63.5, -24, Math.toRadians(90));
+        } else if(gamepad1.b) {
+            initialPose = new Pose2d(63.5, -24, Math.toRadians(90));
+        } else if(gamepad1.y) {
+            initialPose = new Pose2d(63.5, -24, Math.toRadians(90));
+        } else if(gamepad1.x) {
+            initialPose = new Pose2d(63.5, -24, Math.toRadians(90));
+        }
+
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         //inits...
         //Pose2d targetBall = null;
