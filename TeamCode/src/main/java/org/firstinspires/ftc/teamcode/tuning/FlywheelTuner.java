@@ -34,9 +34,9 @@ public class FlywheelTuner extends OpMode {
     public void loop() {
         if(gamepad1.yWasPressed()) {
             if(curTargetVel == highVel) {
-                curTargetVel = highVel;
-            } else {
                 curTargetVel = lowVel;
+            } else {
+                curTargetVel = highVel;
             }
         }
 

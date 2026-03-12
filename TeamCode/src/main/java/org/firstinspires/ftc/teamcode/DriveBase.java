@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveBase {
-    private Gamepad gamepad1;
+    //private Gamepad gamepad1;
     private DcMotor backRight, backLeft, frontRight, frontLeft;
     private double gear = 1;
     private double drive, turn, strafe;
