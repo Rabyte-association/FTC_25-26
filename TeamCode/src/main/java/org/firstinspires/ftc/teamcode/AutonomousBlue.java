@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.opencv.core.Mat;
 
 @Autonomous (name = "AutonomousBlue", group = "Autonomous")
 public class AutonomousBlue extends LinearOpMode {
@@ -32,83 +35,89 @@ public class AutonomousBlue extends LinearOpMode {
         Vector2d launchZoneSmall = new Vector2d(48, 0);
         Vector2d launchZoneBig = new Vector2d(0, 0);
 
-        Action movePPG1 = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(ppg, Math.toRadians(45))
+        Action goToPPG = drive.actionBuilder(drive.localizer.getPose())
+                .strafeToLinearHeading(ppg, Math.toRadians(0))
                 .build();
-        Action movePPG2 = drive.actionBuilder(new Pose2d(ppg.x, ppg.y, Math.toRadians(0)))
-                .lineToY(ppg.y-5.0)
-                .build();
-        Action movePPG3 = drive.actionBuilder(new Pose2d(ppg.x, ppg.y-5.0, Math.toRadians(0)))
-                .lineToY(ppg.y-10.0)
+        Action getPPG = drive.actionBuilder(new Pose2d(ppg.x, ppg.y, Math.toRadians(0)))
+                .lineToY(-64.5, new TranslationalVelConstraint(30))
                 .build();
 
-        Action movePGP1 = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(pgp, Math.toRadians(45))
+        Action goToPGP = drive.actionBuilder(drive.localizer.getPose())
+                .strafeToLinearHeading(pgp, Math.toRadians(0))
                 .build();
-        Action movePGP2 = drive.actionBuilder(new Pose2d(pgp.x, pgp.y, Math.toRadians(0)))
-                .lineToY(pgp.y-5.0)
-                .build();
-        Action movePGP3 = drive.actionBuilder(new Pose2d(pgp.x, pgp.y-5.0, Math.toRadians(0)))
-                .lineToY(pgp.y-10.0)
+        Action getPGP = drive.actionBuilder(new Pose2d(pgp.x, pgp.y, Math.toRadians(0)))
+                .lineToY(-64.5, new TranslationalVelConstraint(30))
                 .build();
 
-        Action moveGPP1 = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(gpp, Math.toRadians(45))
+        Action goToGPP = drive.actionBuilder(drive.localizer.getPose())
+                .strafeToLinearHeading(gpp, Math.toRadians(0))
                 .build();
-        Action moveGPP2 = drive.actionBuilder(new Pose2d(gpp.x, gpp.y, Math.toRadians(0)))
-                .lineToY(gpp.y-5.0)
-                .build();
-        Action moveGPP3 = drive.actionBuilder(new Pose2d(gpp.x, gpp.y-5.0, Math.toRadians(0)))
-                .lineToY(gpp.y-10.0)
+        Action getGPP = drive.actionBuilder(new Pose2d(gpp.x, gpp.y, Math.toRadians(0)))
+                .lineToY(-64.5, new TranslationalVelConstraint(30))
                 .build();
 
-
-
-        Action takeArtifactsPPG = new SequentialAction(
-                movePPG1,
-                movePPG2,
-                movePPG3
-        );
-        Action takeArtifactsPGP = new SequentialAction(
-                movePGP1,
-                //TODO: take ball
-                movePGP2,
-                //TODO: take ball
-                movePGP3
-                //TODO: take ball
-        );
-        Action takeArtifactsGPP = new SequentialAction(
-                moveGPP1,
-                //TODO: take ball
-                moveGPP2,
-                //TODO: take ball
-                moveGPP3
-                //TODO: take ball
-        );
+//        Action movePPG1 = drive.actionBuilder(drive.localizer.getPose())
+//                .strafeToLinearHeading(ppg, Math.toRadians(45))
+//                .build();
+//        Action movePPG2 = drive.actionBuilder(new Pose2d(ppg.x, ppg.y, Math.toRadians(0)))
+//                .lineToY(ppg.y-5.0)
+//                .build();
+//        Action movePPG3 = drive.actionBuilder(new Pose2d(ppg.x, ppg.y-5.0, Math.toRadians(0)))
+//                .lineToY(ppg.y-10.0)
+//                .build();
+//
+//        Action movePGP1 = drive.actionBuilder(drive.localizer.getPose())
+//                .strafeToLinearHeading(pgp, Math.toRadians(45))
+//                .build();
+//        Action movePGP2 = drive.actionBuilder(new Pose2d(pgp.x, pgp.y, Math.toRadians(0)))
+//                .lineToY(pgp.y-5.0)
+//                .build();
+//        Action movePGP3 = drive.actionBuilder(new Pose2d(pgp.x, pgp.y-5.0, Math.toRadians(0)))
+//                .lineToY(pgp.y-10.0)
+//                .build();
+//
+//        Action moveGPP1 = drive.actionBuilder(drive.localizer.getPose())
+//                .strafeToLinearHeading(gpp, Math.toRadians(45))
+//                .build();
+//        Action moveGPP2 = drive.actionBuilder(new Pose2d(gpp.x, gpp.y, Math.toRadians(0)))
+//                .lineToY(gpp.y-5.0)
+//                .build();
+//        Action moveGPP3 = drive.actionBuilder(new Pose2d(gpp.x, gpp.y-5.0, Math.toRadians(0)))
+//                .lineToY(gpp.y-10.0)
+//                .build();
+//
+//
+//
+//        Action takeArtifactsPPG = new SequentialAction(
+//                movePPG1,
+//                movePPG2,
+//                movePPG3
+//        );
+//        Action takeArtifactsPGP = new SequentialAction(
+//                movePGP1,
+//                movePGP2,
+//                movePGP3
+//        );
+//        Action takeArtifactsGPP = new SequentialAction(
+//                moveGPP1,
+//                moveGPP2,
+//                moveGPP3
+//        );
 
 //            Action takeArtifactsPPG = drive.actionBuilder(drive.localizer.getPose())
 //                    .strafeToLinearHeading(ppg, Math.toRadians(45))
-//                    //TODO: take ball
 //                    .lineToY(-45.5)
-//                    //TODO: take ball
 //                    .lineToY(-50.5)
-//                    //TODO: take ball
 //                    .build();
 //            Action takeArtifactsPGP = drive.actionBuilder(drive.localizer.getPose())
 //                    .strafeToLinearHeading(pgp, Math.toRadians(45))
-//                    //TODO: take ball
 //                    .lineToY(-45.5)
-//                    //TODO: take ball
 //                    .lineToY(-50.5)
-//                    //TODO: take ball
 //                    .build();
 //            Action takeArtifactsGPP = drive.actionBuilder(drive.localizer.getPose())
 //                    .strafeToLinearHeading(gpp, Math.toRadians(45))
-//                    //TODO: take ball
 //                    .lineToY(-45.5)
-//                    //TODO: take ball
 //                    .lineToY(-50.5)
-//                    //TODO: take ball
 //                    .build();
 
         Action goToLaunchZoneSmall = drive.actionBuilder(drive.localizer.getPose())
@@ -135,7 +144,10 @@ public class AutonomousBlue extends LinearOpMode {
             currentState = "takeArtifactsPPG";
             telemetry.addData("State:", currentState);
             telemetry.update();
-            Actions.runBlocking(takeArtifactsPPG);
+            Actions.runBlocking(goToPPG);
+            intake.inTake();
+            intake.updateAutonomous(0);
+            Actions.runBlocking(getPPG);
 
             currentState = "goToLaunchZoneBig";
             telemetry.addData("State:", currentState);
@@ -147,9 +159,10 @@ public class AutonomousBlue extends LinearOpMode {
             currentState = "takeArtifactsPGP";
             telemetry.addData("State:", currentState);
             telemetry.update();
+            Actions.runBlocking(goToPGP);
             intake.inTake();
-            intake.update(0);
-            Actions.runBlocking(takeArtifactsPGP);
+            intake.updateAutonomous(0);
+            Actions.runBlocking(getPGP);
 
             currentState = "goToLaunchZoneBig";
             telemetry.addData("State:", currentState);
@@ -166,7 +179,10 @@ public class AutonomousBlue extends LinearOpMode {
             currentState = "takeArtifactsGPP";
             telemetry.addData("State:", currentState);
             telemetry.update();
-            Actions.runBlocking(takeArtifactsGPP);
+            Actions.runBlocking(goToGPP);
+            intake.inTake();
+            intake.updateAutonomous(0);
+            Actions.runBlocking(getGPP);
 
             currentState = "goToLaunchZoneBig";
             telemetry.addData("State:", currentState);

@@ -32,12 +32,7 @@ public class InTakeBest {
     }
 
     public void inTake(){
-        boolean free=false;
-        for (int i=0; i<3; i++){
-            if (balls.get(i).equals("Nothing")){
-                free=true;
-            }
-        }
+        boolean free = isBallInIndexer();
         if (is_outtaking || !free) {
             return;
         }
@@ -100,6 +95,28 @@ public class InTakeBest {
         }
     }
 
+    public void updateAutonomous(int when_is_green){ // when_is_green represents index of green ball in pattern
+        indexer_charge++;
+        if (indexer_charge>=speed_of_intaking && is_outtaking){
+            outtaking_stage++;
+            indexer_charge=0;
+            if (when_is_green-1==outtaking_stage){
+                SetOutput("Green");
+            } else {
+                SetOutput("Purple");
+            } if (outtaking_stage>2){
+                reset();
+            }
+        } else if (!CheckColor().equals("Nothing") && is_intaking){
+            balls.set(current_index, CheckColor());
+            reset();
+        }if (indexer_charge>120){ // if intaking takes to much time abort process
+            reset();
+        }if (base.ballDetection.pipeline.detectedPurple || base.ballDetection.pipeline.detectedGreen) {
+            inTake();
+        }
+    }
+
     public void SetIndexerServo(int index, boolean isOutput){
         if (!isOutput){
             base.indexerServo.setPosition((double) (120 * index) /360);
@@ -138,5 +155,21 @@ public class InTakeBest {
         current_index = index;
         SetIndexerServo(index, true);
         balls.set(index, "Nothing");
+    }
+
+    public boolean IsIndexerFull(){
+        for (int i=0; i<3; i++){
+            if (balls.get(i).equals("Nothing")){
+                return false;
+            }
+        }return true;
+    }
+
+    public boolean isBallInIndexer(){
+        for (int i=0; i<3; i++){
+            if (!balls.get(i).equals(("Nothing"))){
+                return true;
+            }
+        }return false;
     }
 }
