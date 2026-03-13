@@ -86,7 +86,6 @@ public class TuretMechanism {
                 power = 0;
             }else{
                 power = Range.clip(pTerm + dTerm, -MAX_POWER, MAX_POWER);
-
             }
             // utu garberys pedal jest pedalem i encoder 360 zrop
             turretMotor.setPower(power);
@@ -94,6 +93,13 @@ public class TuretMechanism {
         } else{
             turretMotor.setPower(0);
             lastError = 0;
+
+            if(gamepad1.left_bumper) {
+                turretMotor.setPower(power);
+            }
+            if (gamepad1.right_bumper) {
+                turretMotor.setPower(-power);
+            }
         }
         telemetry.addData("kP Value", kP);
         telemetry.addData("kD Value", kD);
