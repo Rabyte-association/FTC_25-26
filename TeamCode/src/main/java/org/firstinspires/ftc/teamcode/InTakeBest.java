@@ -14,10 +14,12 @@ public class InTakeBest {
     private int outtaking_stage; // one stage for each ball
     private boolean is_intaking; // currently intaking or out taking
     private boolean is_outtaking;
+    private Flywheel flywheel;
 
 
     public InTakeBest(Base base) {
         this.base = base;
+        flywheel = new Flywheel(base);
         current_index = 0;
         index_is_reversed = false;
         indexer_charge = speed_of_intaking;
@@ -73,7 +75,8 @@ public class InTakeBest {
 
     public void update(int when_is_green){ // when_is_green represents index of green ball in pattern
         indexer_charge++;
-        if (indexer_charge>=speed_of_intaking && is_outtaking){
+        if (indexer_charge>=speed_of_intaking && is_outtaking){ // ustawiaie serw w dobrych pozycjach pod czas wyrzucania
+            base.outtakeServo.setPosition(0.0);// value to tune
             outtaking_stage++;
             indexer_charge=0;
             if (when_is_green-1==outtaking_stage){
@@ -83,7 +86,11 @@ public class InTakeBest {
             } if (outtaking_stage>2){
                 reset();
             }
-        } else if (!CheckColor().equals("Nothing") && is_intaking){
+        } else if(indexer_charge>=speed_of_intaking-5 && is_outtaking) { // popchnięcie piłki do góry
+            base.outtakeServo.setPosition(0.3); // value to tune
+        } else if(indexer_charge>=speed_of_intaking-10 && is_outtaking){ // odpalenie silnika
+            flywheel.shoot();
+        }else if (!CheckColor().equals("Nothing") && is_intaking){ //
             balls.set(current_index, CheckColor());
             reset();
         } else if (base.gamepad.a){
@@ -93,6 +100,7 @@ public class InTakeBest {
         }if (indexer_charge>120){ // if intaking takes to much time abort process
             reset();
         }
+        flywheel.update(base.gamepad);
     }
 
     public void updateAutonomous(int when_is_green){ // when_is_green represents index of green ball in pattern
@@ -107,6 +115,8 @@ public class InTakeBest {
             } if (outtaking_stage>2){
                 reset();
             }
+        }else if(indexer_charge>=speed_of_intaking-10 && is_outtaking){
+            flywheel.shoot();
         } else if (!CheckColor().equals("Nothing") && is_intaking){
             balls.set(current_index, CheckColor());
             reset();
@@ -115,6 +125,7 @@ public class InTakeBest {
         }if (base.ballDetection.pipeline.detectedPurple && needsPurple()<2 || base.ballDetection.pipeline.detectedGreen && needsGreen()<1) {
             inTake();
         }
+        flywheel.update(base.gamepad);
     }
 
     public void SetIndexerServo(int index, boolean isOutput){
