@@ -31,14 +31,14 @@ public class Flywheel {
         }
     }
 
-    public class ShootAuto implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            flywheelMotor.setVelocity(1500);
-            return false;
-        }
-    }
-    Action shootAuto() {
-        return new Flywheel.ShootAuto();
-    }
+//    public class ShootAuto implements Action {
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket packet) {
+//            flywheelMotor.setVelocity(1500);
+//            return false;
+//        }
+//    }
+//    Action shootAuto() {
+//        return new Flywheel.ShootAuto();
+//    }
 }

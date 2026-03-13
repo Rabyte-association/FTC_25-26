@@ -1,119 +1,130 @@
 package org.firstinspires.ftc.teamcode;
 import java.util.ArrayList;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+
 import java.util.List;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 
 public class InTakeBest {
-    private final ColorSensor colorSensor;
-    private final Servo IndexerServo;
+    private final Base base; // every robot component is there
     private final List<String> balls = new ArrayList<>();
-    private int current_index;
-    private boolean index_is_reversed;
-    private int indexer_charge;
-    private final int speed_of_intaking = 30; // read the code before changing
-    private int intaking_stage;
-    private boolean is_intaking;
-    private Gamepad gamepad;
+    private int current_index; // represents the state of indexer
+    private boolean index_is_reversed; // ready for intaking or out taking
+    private int indexer_charge; // timer connected to speed_of_intaking
+    private final int speed_of_intaking = 30; // cooldown between inputting the balls
+    private int outtaking_stage; // one stage for each ball
+    private boolean is_intaking; // currently intaking or out taking
+    private boolean is_outtaking;
 
-    public InTakeBest(HardwareMap hardwareMap, Gamepad gamepad1) {
-        IndexerServo = hardwareMap.get(Servo.class, "servo");
-        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+
+    public InTakeBest(Base base) {
+        this.base = base;
         current_index = 0;
         index_is_reversed = false;
         indexer_charge = speed_of_intaking;
-        intaking_stage = 0;
-        is_intaking = true;
-        gamepad = gamepad1;
+        outtaking_stage = 0;
+        is_intaking = false;
+        is_outtaking = false;
 
         for (int i=0; i<3; i++) {
             balls.add("Nothing");
         }
-        IndexerServo.setPosition(0.0);
+        this.base.indexerServo.setPosition(0.0);
     }
 
-    public void intake(){
+    public void inTake(){
+        boolean free=false;
+        for (int i=0; i<3; i++){
+            if (balls.get(i).equals("Nothing")){
+                free=true;
+            }
+        }
+        if (is_outtaking || !free) {
+            return;
+        }
         if (index_is_reversed){
             current_index --;
             SetIndexerServo(current_index, false);
         }
         indexer_charge = 0;
-        intaking_stage = 1;
         is_intaking = true;
-        //start motor
+        base.intakeMotor.setPower(1.0);
     }
-    public void outake(){
+    public void outTake(){
+        for (int i=0; i<3; i++){
+            if (balls.get(i).equals("Nothing")){
+                return;
+            }
+        }
+        if (is_intaking || is_outtaking) {
+            return;
+        }
         if (!index_is_reversed){
             current_index --;
             SetIndexerServo(current_index, true);
         }
         indexer_charge = 0;
-        intaking_stage = 1;
-        is_intaking = false;
-        //start motor
+        outtaking_stage = 1;
+        is_outtaking = true;
+        base.outtakeMotor.setPower(1.0);
+    }
+
+    public void reset(){
+        is_outtaking=false;
+        is_intaking=false;
+        outtaking_stage=0;
+        base.outtakeMotor.setPower(0.0);
+        base.intakeMotor.setPower(0.0);
     }
 
     public void update(int when_is_green){ // when_is_green represents index of green ball in pattern
         indexer_charge++;
-        if (indexer_charge>=speed_of_intaking && intaking_stage!=0 && !CheckColor().equals("Nothing")){
-            intaking_stage++;
-            if (intaking_stage>3){
-                intaking_stage=0;
-            }
+        if (indexer_charge>=speed_of_intaking && is_outtaking){
+            outtaking_stage++;
             indexer_charge=0;
-            if (is_intaking) {
-                //motor
-                SetIndexerServo(intaking_stage - 1, false);
-            }else{
-                //motor
-                if (intaking_stage==when_is_green){
-                    SetOutput("Green");
-                }else{
-                    SetOutput("Purple");
-                }
+            if (when_is_green-1==outtaking_stage){
+                SetOutput("Green");
+            } else {
+                SetOutput("Purple");
+            } if (outtaking_stage>2){
+                reset();
             }
-        } else if (gamepad.a){
-            intake();
-        } else if (gamepad.b) {
-            outake();
+        } else if (!CheckColor().equals("Nothing") && is_intaking){
+            balls.set(current_index, CheckColor());
+            reset();
+        } else if (base.gamepad.a){
+            inTake();
+        } else if (base.gamepad.b) {
+            outTake();
+        }if (indexer_charge>120){ // if intaking takes to much time abort process
+            reset();
         }
     }
 
     public void SetIndexerServo(int index, boolean isOutput){
         if (!isOutput){
-            IndexerServo.setPosition((double) (120 * index) /360);
+            base.indexerServo.setPosition((double) (120 * index) /360);
         }else{
-            IndexerServo.setPosition((double) (((120 * index)+180) /360)%1.0);
+            base.indexerServo.setPosition((double) (((120 * index)+180) /360)%1.0);
         }
-        current_index = index%3;
+        current_index = (index + 3) % 3;
         index_is_reversed = isOutput;
     }
 
     public String CheckColor(){
-        int red = colorSensor.red();
-        int green = colorSensor.green();
-        int blue = colorSensor.blue();
-        if (green-3>red && green-3>blue){
-            return "Green";
-        } else if (blue<5 && green<5 && red<5){
+//        int red=2, green=1, blue=0;
+        int red = base.Red();
+        int green = base.Green();
+        int blue = base.Blue();
+        if (blue<110 && green<110 && red<110){
             return "Nothing";
+        } else if (green*0.8>red && green*0.8>blue){
+            return "Green";
         } else{
             return "Purple";
         }
     }
 
-    public int Red(){
-        return colorSensor.red();
-    }
-    public int Blue(){
-        return colorSensor.blue();
-    }
-    public int Green(){
-        return colorSensor.green();
-    }
+
     public void SetOutput(String color){
         int min_distance = 3;
         int index = 0;
@@ -126,5 +137,6 @@ public class InTakeBest {
         }
         current_index = index;
         SetIndexerServo(index, true);
+        balls.set(index, "Nothing");
     }
 }
