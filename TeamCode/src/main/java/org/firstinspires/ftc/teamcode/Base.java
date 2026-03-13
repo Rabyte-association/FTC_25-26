@@ -1,29 +1,36 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Base { // class contains every electronic part of the robot
-    DcMotor frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, intakeMotor, outtakeMotor;
+    DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, intakeMotor, outtakeMotor, turretMotor, shootingMotor;
     ColorSensor intakeSensor;
-    Servo indexerServo;
+    Servo indexerServo1, indexerServo2, outtakeServo, turretServo;
     Gamepad gamepad;
     BallDetection ballDetection;
 
     public Base(HardwareMap hardwareMap, Gamepad pad){
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "mot4");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "mot3");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "mot2");
-        backRightMotor = hardwareMap.get(DcMotor.class, "mot1");
-        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-        outtakeMotor = hardwareMap.get(DcMotor.class, "outtakeMotor");
+        frontLeftMotor = hardwareMap.get(DcMotorEx.class, "mot4");
+        backLeftMotor = hardwareMap.get(DcMotorEx.class, "mot3");
+        frontRightMotor = hardwareMap.get(DcMotorEx.class, "mot2");
+        backRightMotor = hardwareMap.get(DcMotorEx.class, "mot1");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtakeMotor");
+        outtakeServo = hardwareMap.get(Servo.class, "outtakeServo");
 
         intakeSensor = hardwareMap.get(ColorSensor.class, "intakeSensor");
 
-        indexerServo = hardwareMap.get(Servo.class, "indexerServo");
+        indexerServo1 = hardwareMap.get(Servo.class, "indexerServo1");
+        indexerServo2 = hardwareMap.get(Servo.class, "indexerServo2");
+
+        shootingMotor = hardwareMap.get(DcMotorEx.class, "shootingMotor");
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+
+        turretServo = hardwareMap.get(Servo.class, "turretServo");
 
         gamepad = pad;
 
@@ -38,5 +45,10 @@ public class Base { // class contains every electronic part of the robot
     }
     public int Green(){
         return intakeSensor.green();
+    }
+
+    public void  setIndexerServo(int degrees){
+        indexerServo1.setPosition(degrees/(360*5));
+        indexerServo2.setPosition(degrees/(360*5));
     }
 }

@@ -3,27 +3,27 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-public class LinearOpMode extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
+public class LinearOpMode2 extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
     double endGameStart;
     boolean isEndGame;
+    private Base base;
+    private DriveBase drivebase;
     private InTakeBest intake;
 
     @Override
     public void runOpMode() throws InterruptedException {
         endGameStart = getRuntime() + 90;
 
-        DriveBase drivebase = new DriveBase(hardwareMap);
-        //intake = new InTakeBest(hardwareMap, gamepad1);
-        //String color;
-        Flywheel flywheel = new Flywheel(hardwareMap);
+        base = new Base(hardwareMap, gamepad1);
+        intake = new InTakeBest(base);
+        drivebase = new DriveBase(base);
+        Flywheel flywheel = new Flywheel(base);
 
         waitForStart();
 
         while (opModeIsActive()) {
             drivebase.update(gamepad1);
-            //color = intake.CheckColor();
-            //telemetry.addData("color", color);
-            //telemetry.update();
+            intake.update(2);
             flywheel.update(gamepad1);
 
             if(endGameStart >= getRuntime() && !isEndGame) {

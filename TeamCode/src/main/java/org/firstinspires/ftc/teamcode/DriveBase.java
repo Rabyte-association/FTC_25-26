@@ -12,14 +12,16 @@ public class DriveBase {
     private double gear = 1;
     private double drive, turn, strafe;
     private double frontLeftPower, frontRightPower, backLeftPower, backRightPower;
+    private Base base;
 
-    public DriveBase(HardwareMap hardwareMap) {
+    public DriveBase(Base base) {
         //this.gamepad1 = gamepad;
+        this.base=base;
 
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        backRight = base.backRightMotor;
+        backLeft = base.backLeftMotor;
+        frontRight = base.frontRightMotor;
+        frontLeft = base.frontLeftMotor;
 
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -31,6 +33,12 @@ public class DriveBase {
         drive  = Math.abs(gamepad1.left_stick_y)  > controllerSensitivity ? -gamepad1.left_stick_y  : 0;
         turn   = Math.abs(gamepad1.right_stick_x) > controllerSensitivity ? -gamepad1.right_stick_x : 0;
         strafe = Math.abs(gamepad1.left_stick_x)  > controllerSensitivity ?  gamepad1.left_stick_x  : 0;
+
+        if (gamepad1.y){ //NPRAWIĆ POZYCJE
+            base.turretServo.setPosition(0.9);
+        }else if (gamepad1.b){
+            base.turretServo.setPosition(0.1);
+        }
 
         frontLeftPower = drive + turn + strafe;
         frontRightPower = drive - turn - strafe;

@@ -8,7 +8,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous (name = "AutonomousBlue", group = "Autonomous")
-public class AutonomousBlue extends LinearOpMode {
+public class AutonomousBlue extends LinearOpMode1 {
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(63.0435, -24, Math.toRadians(90));
         if (gamepad1.dpad_right) {
@@ -167,6 +167,10 @@ public class AutonomousBlue extends LinearOpMode {
             telemetry.addData("State:", currentState);
             telemetry.update();
             Actions.runBlocking(takeArtifactsGPP);
+            intake.inTake();
+            while (!intake.IsIndexerFull()){
+                intake.update(1);
+            }
 
             currentState = "goToLaunchZoneBig";
             telemetry.addData("State:", currentState);

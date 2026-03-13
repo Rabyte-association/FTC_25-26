@@ -214,17 +214,17 @@ public final class MecanumDrive {
         }
     }
 
-    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
+    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose, Base base) {
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftBack = hardwareMap.get(DcMotorEx.class, "backLeft");
-        rightBack = hardwareMap.get(DcMotorEx.class, "backRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        leftFront = base.frontLeftMotor;
+        leftBack = base.backLeftMotor;
+        rightBack = base.backRightMotor;
+        rightFront = base.backRightMotor;
 
         rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
