@@ -8,10 +8,10 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous (name = "AutonomousBlue", group = "Autonomous")
-public class AutonomousBlue extends LinearOpMode1 {
+@Autonomous (name = "AutonomousRed", group = "Autonomous")
+public class AutonomousRed extends LinearOpMode1 {
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(63.0435, -24, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(63.0435, -24, Math.toRadians(90)); //TODO: zmienic pozycje
         if (gamepad1.dpad_right) {
             initialPose = new Pose2d(63.0435, -24, Math.toRadians(90));
         } else if (gamepad1.dpad_left) {
@@ -25,43 +25,43 @@ public class AutonomousBlue extends LinearOpMode1 {
 
         String currentState = "";
 
-        Vector2d gpp = new Vector2d(-12.0, -40.5);
-        Vector2d pgp = new Vector2d(12.0, -40.5);
-        Vector2d ppg = new Vector2d(36.0, -40.5);
-        Vector2d gate = new Vector2d(0, -65.3);
+        Vector2d gpp = new Vector2d(-12.0, 40.5);
+        Vector2d pgp = new Vector2d(12.0, 40.5);
+        Vector2d ppg = new Vector2d(36.0, 40.5);
+        Vector2d gate = new Vector2d(0, 65.3);
         Vector2d launchZoneSmall = new Vector2d(48, 0);
         Vector2d launchZoneBig = new Vector2d(0, 0);
 
         Action goToPPG = drive.actionBuilder(drive.localizer.getPose())
                 .strafeToLinearHeading(ppg, Math.toRadians(0))
                 .build();
-        Action getPPG = drive.actionBuilder(new Pose2d(ppg.x, ppg.y, Math.toRadians(0)))
-                .lineToY(-64.5, new TranslationalVelConstraint(30))
+        Action getPPG = drive.actionBuilder(new Pose2d(ppg.x, ppg.y, Math.toRadians(180)))
+                .lineToY(64.5, new TranslationalVelConstraint(30))
                 .build();
 
         Action goToPGP = drive.actionBuilder(drive.localizer.getPose())
                 .strafeToLinearHeading(pgp, Math.toRadians(0))
                 .build();
-        Action getPGP = drive.actionBuilder(new Pose2d(pgp.x, pgp.y, Math.toRadians(0)))
-                .lineToY(-64.5, new TranslationalVelConstraint(30))
+        Action getPGP = drive.actionBuilder(new Pose2d(pgp.x, pgp.y, Math.toRadians(180)))
+                .lineToY(64.5, new TranslationalVelConstraint(30))
                 .build();
 
         Action goToGPP = drive.actionBuilder(drive.localizer.getPose())
                 .strafeToLinearHeading(gpp, Math.toRadians(0))
                 .build();
-        Action getGPP = drive.actionBuilder(new Pose2d(gpp.x, gpp.y, Math.toRadians(0)))
-                .lineToY(-64.5, new TranslationalVelConstraint(30))
+        Action getGPP = drive.actionBuilder(new Pose2d(gpp.x, gpp.y, Math.toRadians(180)))
+                .lineToY(64.5, new TranslationalVelConstraint(30))
                 .build();
 
         Action goToLaunchZoneSmall = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(launchZoneSmall, Math.toRadians(45)) //TODO: zmienic kat
+                .strafeToLinearHeading(launchZoneSmall, Math.toRadians(135)) //TODO: zmienic kat
                 .build();
         Action goToLaunchZoneBig = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(launchZoneBig, Math.toRadians(45))
+                .strafeToLinearHeading(launchZoneBig, Math.toRadians(135))
                 .build();
 
         Action openGate = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(gate, Math.toRadians(0))
+                .strafeToLinearHeading(gate, Math.toRadians(180))
                 .build();
 
         waitForStart();
