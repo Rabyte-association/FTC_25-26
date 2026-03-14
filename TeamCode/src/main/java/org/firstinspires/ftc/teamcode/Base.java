@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Base { // class contains every electronic part of the robot
     DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, intakeMotor, outtakeMotor, turretMotor, shootingMotor;
@@ -12,6 +14,8 @@ public class Base { // class contains every electronic part of the robot
     Servo indexerServo1, indexerServo2, outtakeServo, turretServo;
     Gamepad gamepad;
     BallDetection ballDetection;
+
+    DistanceSensor distanceSensor;
 
     public Base(HardwareMap hardwareMap, Gamepad pad){
         frontLeftMotor = hardwareMap.get(DcMotorEx.class, "mot4");
@@ -32,6 +36,8 @@ public class Base { // class contains every electronic part of the robot
 
         turretServo = hardwareMap.get(Servo.class, "turretServo");
 
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "distSensor");
+
         gamepad = pad;
 
         ballDetection = new BallDetection(hardwareMap);
@@ -50,5 +56,8 @@ public class Base { // class contains every electronic part of the robot
     public void  setIndexerServo(int degrees){
         indexerServo1.setPosition(degrees/(360*5));
         indexerServo2.setPosition(degrees/(360*5));
+    }
+    public double dist(){
+        return distanceSensor.getDistance(DistanceUnit.CM);
     }
 }

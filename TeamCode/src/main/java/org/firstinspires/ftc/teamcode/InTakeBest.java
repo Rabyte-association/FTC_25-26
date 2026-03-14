@@ -79,6 +79,7 @@ public class InTakeBest {
             base.outtakeServo.setPosition(0.0);// value to tune
             outtaking_stage++;
             indexer_charge=0;
+            base.outtakeServo.setPosition(0.2);//TODO: TUNE!!
             if (when_is_green-1==outtaking_stage){
                 SetOutput("Green");
             } else {
@@ -86,11 +87,9 @@ public class InTakeBest {
             } if (outtaking_stage>2){
                 reset();
             }
-        } else if(indexer_charge>=speed_of_intaking-5 && is_outtaking) { // popchnięcie piłki do góry
-            base.outtakeServo.setPosition(0.3); // value to tune
-        } else if(indexer_charge>=speed_of_intaking-10 && is_outtaking){ // odpalenie silnika
-            flywheel.shoot();
-        }else if (!CheckColor().equals("Nothing") && is_intaking){ //
+        }else if (is_outtaking && base.dist()>3 && base.dist()<6){
+            base.outtakeServo.setPosition(0.4);//TODO: TUNE!!!
+        } else if (!CheckColor().equals("Nothing") && is_intaking){ //
             balls.set(current_index, CheckColor());
             reset();
         } else if (base.gamepad.a){
