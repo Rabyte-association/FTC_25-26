@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 
 public class Base { // class contains every electronic part of the robot
     DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, intakeMotor, outtakeMotor, turretMotor, shootingMotor;
@@ -15,12 +14,12 @@ public class Base { // class contains every electronic part of the robot
     Gamepad gamepad;
     BallDetection ballDetection;
 
-    DistanceSensor distanceSensor;
+    AnalogInput distanceSensor;
 
     public Base(HardwareMap hardwareMap, Gamepad pad){
         frontLeftMotor = hardwareMap.get(DcMotorEx.class, "mot4");
-        backLeftMotor = hardwareMap.get(DcMotorEx.class, "mot3");
-        frontRightMotor = hardwareMap.get(DcMotorEx.class, "mot2");
+        backLeftMotor = hardwareMap.get(DcMotorEx.class, "mot2");
+        frontRightMotor = hardwareMap.get(DcMotorEx.class, "mot3");
         backRightMotor = hardwareMap.get(DcMotorEx.class, "mot1");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtakeMotor");
@@ -29,15 +28,14 @@ public class Base { // class contains every electronic part of the robot
         intakeSensor = hardwareMap.get(ColorSensor.class, "intakeSensor");
 
         indexerServo1 = hardwareMap.get(Servo.class, "indexerServo1");
-        indexerServo2 = hardwareMap.get(Servo.class, "indexerServo2");
+//        indexerServo2 = hardwareMap.get(Servo.class, "indexerServo2");
 
         shootingMotor = hardwareMap.get(DcMotorEx.class, "shootingMotor");
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
 
         turretServo = hardwareMap.get(Servo.class, "turretServo");
 
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "distSensor");
-
+//        distanceSensor = hardwareMap.get(AnalogInput.class, "distSensor");
         gamepad = pad;
 
         ballDetection = new BallDetection(hardwareMap);
@@ -54,10 +52,7 @@ public class Base { // class contains every electronic part of the robot
     }
 
     public void  setIndexerServo(int degrees){
-        indexerServo1.setPosition(degrees/(360*5));
-        indexerServo2.setPosition(degrees/(360*5));
-    }
-    public double dist(){
-        return distanceSensor.getDistance(DistanceUnit.CM);
+        indexerServo1.setPosition((float)degrees/(float) (360*5));
+//        indexerServo2.setPosition(degrees/(360*5));
     }
 }

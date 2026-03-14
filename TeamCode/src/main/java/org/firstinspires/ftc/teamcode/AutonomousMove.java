@@ -1,31 +1,38 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous (name = "AutonomousRed", group = "Autonomous")
-public class AutonomousMove extends LinearOpMode1 {
+@Autonomous(name = "AutonomousMoveForward", group = "Autonomous")
+public class AutonomousMove extends LinearOpMode {
+
+    Base base;
+
+    @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(0, -0, Math.toRadians(90));
 
-        Base base = new Base(hardwareMap, null);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose, base);
-
-        Action move = drive.actionBuilder(initialPose)
-                .lineToY(10)
-                .waitSeconds(30)
-                .build();
+        base = new Base(hardwareMap, gamepad1);
 
         waitForStart();
 
-        while (opModeIsActive()) {
-            if (isStopRequested()) return;
-            Actions.runBlocking(move);
+        if (opModeIsActive()) {
+            base.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            base.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            base.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            base.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            base.frontLeftMotor.setPower(-0.5);
+            base.frontRightMotor.setPower(0.5);
+            base.backLeftMotor.setPower(0.5);
+            base.backRightMotor.setPower(0.5);
+
+            sleep(2000); // 2s
+
+            base.frontLeftMotor.setPower(0);
+            base.frontRightMotor.setPower(0);
+            base.backLeftMotor.setPower(0);
+            base.backRightMotor.setPower(0);
         }
     }
 }

@@ -8,23 +8,27 @@ public class LinearOpMode1 extends com.qualcomm.robotcore.eventloop.opmode.Linea
     boolean isEndGame;
     private Base base;
     private DriveBase drivebase;
-    private InTakeBest intake;
+    private inTake intake;
 
     @Override
     public void runOpMode() throws InterruptedException {
         endGameStart = getRuntime() + 90;
 
         base = new Base(hardwareMap, gamepad1);
-        intake = new InTakeBest(base);
+        intake = new inTake(base);
         drivebase = new DriveBase(base);
-        Flywheel flywheel = new Flywheel(base);
+//        Flywheel flywheel = new Flywheel(base);
+        int a=0;
 
         waitForStart();
 
         while (opModeIsActive()) {
             drivebase.update(gamepad1);
             intake.update(1);
-            flywheel.update(gamepad1);
+            telemetry.addData("pos", intake.pos);
+            telemetry.addData("col", intake.CheckColor());
+            telemetry.addData("a", a);
+            telemetry.update();
 
             if(endGameStart >= getRuntime() && !isEndGame) {
                 gamepad1.rumbleBlips(3);

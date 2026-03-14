@@ -9,7 +9,7 @@ public class InTakeBest {
     private final List<String> balls = new ArrayList<>();
     private int current_index; // represents the state of indexer
     private boolean index_is_reversed; // ready for intaking or out taking
-    private int indexer_charge; // timer connected to speed_of_intaking
+    int indexer_charge; // timer connected to speed_of_intaking
     private final int speed_of_intaking = 30; // cooldown between inputting the balls
     private int outtaking_stage; // one stage for each ball
     private boolean is_intaking; // currently intaking or out taking
@@ -35,12 +35,13 @@ public class InTakeBest {
 
     public void inTake(){
         boolean free = isBallInIndexer();
-        if (is_outtaking || !free) {
+//        boolean free=
+        if (is_outtaking||is_intaking) {
             return;
         }
         if (index_is_reversed){
             current_index --;
-            SetIndexerServo(current_index, false);
+            SetIndexerServo(current_index, true);
         }
         indexer_charge = 0;
         is_intaking = true;
@@ -57,12 +58,12 @@ public class InTakeBest {
         }
         if (!index_is_reversed){
             current_index --;
-            SetIndexerServo(current_index, true);
+            SetIndexerServo(current_index, false);
         }
         indexer_charge = 0;
         outtaking_stage = 1;
         is_outtaking = true;
-        base.outtakeMotor.setPower(1.0);
+        base.outtakeMotor.setPower(-1.0);
     }
 
     public void reset(){
@@ -87,13 +88,13 @@ public class InTakeBest {
             } if (outtaking_stage>2){
                 reset();
             }
-        }else if (is_outtaking && base.dist()>3 && base.dist()<6){
+        }else if (is_outtaking){
             base.outtakeServo.setPosition(0.4);//TODO: TUNE!!!
         } else if (!CheckColor().equals("Nothing") && is_intaking){ //
             balls.set(current_index, CheckColor());
             reset();
-        } else if (base.gamepad.a){
-            inTake();
+        } if (base.gamepad.a){
+            this.inTake();
         } else if (base.gamepad.b) {
             outTake();
         }if (indexer_charge>120){ // if intaking takes to much time abort process
@@ -163,7 +164,7 @@ public class InTakeBest {
             }
         }
         current_index = index;
-        SetIndexerServo(index, true);
+        SetIndexerServo(index, false);
         balls.set(index, "Nothing");
     }
 
