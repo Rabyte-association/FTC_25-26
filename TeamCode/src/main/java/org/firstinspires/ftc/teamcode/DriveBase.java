@@ -29,14 +29,14 @@ public class DriveBase {
     public void update(Gamepad gamepad1) {
         double controllerSensitivity = 0.05;
         drive  = Math.abs(gamepad1.left_stick_y)  > controllerSensitivity ? -gamepad1.left_stick_y  : 0;
-        turn   = Math.abs(gamepad1.right_stick_x) > controllerSensitivity ? gamepad1.right_stick_x : 0;
-        strafe = Math.abs(gamepad1.left_stick_x)  > controllerSensitivity ?  gamepad1.left_stick_x  : 0;
+        turn   = Math.abs(gamepad1.right_stick_x) > controllerSensitivity ? -gamepad1.right_stick_x : 0;
+        strafe = Math.abs(gamepad1.left_stick_x)  > controllerSensitivity ?  -gamepad1.left_stick_x  : 0;
 
 
-        frontLeftPower = drive + turn + strafe;
-        frontRightPower = drive - turn - strafe;
+        frontLeftPower = -(drive + turn + strafe);
+        frontRightPower = -(drive - turn - strafe);
         backLeftPower = drive + turn - strafe;
-        backRightPower = drive - turn + strafe;
+        backRightPower = -(drive - turn + strafe);
 //        if (gamepad1.a){ frontLeftPower=1.0;}else{frontLeftPower=0.0;}
 //        if (gamepad1.b){ frontRightPower=1.0;}else{frontRightPower=0.0;}
 //        if (gamepad1.x){ backLeftPower=1.0;}else{backLeftPower=0.0;}
