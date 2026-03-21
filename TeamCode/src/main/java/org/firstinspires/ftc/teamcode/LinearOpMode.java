@@ -22,6 +22,10 @@ public class LinearOpMode extends com.qualcomm.robotcore.eventloop.opmode.Linear
         while (opModeIsActive()) {
 //            telemetry.addData("color: ", intake.CheckColor());
             intake.update(0, gamepad1);
+            drivebase.update(gamepad1);
+            telemetry.addData("isIntaking: ", intake.isInTaking);
+            telemetry.addData("indexerClear: ", intake.getIndex(0));
+            telemetry.addData("Color: ", intake.CheckColor());
             telemetry.update();
             if(endGameStart >= getRuntime() && !isEndGame) {
                 gamepad1.rumbleBlips(3);

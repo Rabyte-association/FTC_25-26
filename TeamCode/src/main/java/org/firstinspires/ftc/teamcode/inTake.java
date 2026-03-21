@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class inTake {
     public ColorSensor colorSensor;
     public DcMotor outTakeMotor;
+    public DcMotor inTakeMotor;
     public Servo indexerServo1, indexerServo2;
     public DigitalChannel distSensor;
     public int pos;
@@ -29,12 +30,12 @@ public class inTake {
 
     static {
         positions = new ArrayList<>(); //TODO: Tune
-        positions.add(0);
-        positions.add(120);
-        positions.add(240);
         positions.add(180);
         positions.add(300);
         positions.add(60);
+        positions.add(0);
+        positions.add(120);
+        positions.add(240);
     }
 
     inTake(HardwareMap hardwareMap){
@@ -49,6 +50,7 @@ public class inTake {
         indexerServo1 = hardwareMap.get(Servo.class, "indexerServo1");
 //        indexerServo2 = hardwareMap.get(Servo.class, "indexerServo2");
         outTakeMotor = hardwareMap.get(DcMotor.class, "outTakeMotor");
+        inTakeMotor = hardwareMap.get(DcMotor.class, "inTakeMotor");
         colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
         distSensor = hardwareMap.get(DigitalChannel.class, "distSensor");
         distSensor.setMode(DigitalChannel.Mode.INPUT);
@@ -63,6 +65,7 @@ public class inTake {
         SetIndexerServo(getIndex(0), false);
         pos = getIndex(0);
         startedInTaking = timer.time(TimeUnit.SECONDS);
+        inTakeMotor.setPower(1.0);
         isInTaking=true;
     }
     private void OutTakeBall(int color){
@@ -80,9 +83,15 @@ public class inTake {
             if (CheckColor()!=0){ // ball found
                 balls.add(pos, CheckColor());
                 isInTaking=false;
-            } else if (timer.time(TimeUnit.SECONDS)-startedInTaking==(float) 2) { //time out
+                inTakeMotor.setPower(0.0);
+            } else if (timer.time(TimeUnit.SECONDS)-startedInTaking==(double) 2) { //time out
                 isInTaking = false;
+                inTakeMotor.setPower(0.0);
             }
+        } else if (gamepad.a){
+            inTakeBall();
+        }
+
 //        }else if (isOutTaking){
 //            if (detectedBall>10){
 //                balls.add(pos, 0);
@@ -90,7 +99,7 @@ public class inTake {
 //            } else if (timer.time(TimeUnit.SECONDS)-startedOutTaking==(float) 2) { //time out
 //                isOutTaking = false;
 //            }
-        }
+//        }
     }
 
     private void SetIndexerServo(int index, boolean isOutput){
@@ -117,7 +126,7 @@ public class inTake {
         return counter;
     }
 
-    private int getIndex(int color){
+    public int getIndex(int color){
         for (int i=0; i<3; i++){
             if (balls.get(i)==color){
                 return i;
