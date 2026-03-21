@@ -1,30 +1,33 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp(name="Turret Mechanism", group="TeleOp")
-public class LinearOpMode extends OpMode {
-    private Base base;
+@TeleOp
+public class LinearOpMode extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
+    double endGameStart;
+    boolean isEndGame;
     private DriveBase drivebase;
-    private InTakeBest intake;
+    private inTake intake;
 
     @Override
-    public void init() {
-        base = new Base(hardwareMap, gamepad1);
-        drivebase = new DriveBase(base);
-        intake = new InTakeBest(base);
-    }
+    public void runOpMode() throws InterruptedException {
+        endGameStart = getRuntime() + 90;
 
-    @Override
-    public void start() {
-    }
+        intake = new inTake(hardwareMap);
+        drivebase = new DriveBase(hardwareMap);
 
+        waitForStart();
 
-    @Override
-    public void loop() {
-        drivebase.update();
-        intake.update(0);
-        telemetry.update();
+        while (opModeIsActive()) {
+//            telemetry.addData("color: ", intake.CheckColor());
+            intake.update(0, gamepad1);
+            telemetry.update();
+            if(endGameStart >= getRuntime() && !isEndGame) {
+                gamepad1.rumbleBlips(3);
+                isEndGame = true;
+            }
+
+        }
     }
 }
